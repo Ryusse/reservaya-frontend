@@ -14,7 +14,10 @@
 			"**/vite.config.ts",
 			"!**/src/routeTree.gen.ts",
 			"!**/src/styles.css",
-			"!**/src/components/ui"
+			"!**/src/components/ui/provider.tsx",
+			"!**/src/components/ui/color-mode.tsx",
+			"!**/src/components/ui/toaster.tsx",
+			"!**/src/components/ui/tooltip.tsx"
 		]
 	},
 	"formatter": {
