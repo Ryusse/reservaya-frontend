@@ -16,7 +16,8 @@
     "check": "tsc --noEmit && biome check",
     "start": "node .output/server/index.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "tests": "vitest run --reporter=verbose"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.37.0",
