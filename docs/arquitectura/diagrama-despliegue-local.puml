@@ -1,0 +1,83 @@
+@startuml ReservaYa_despliegue_local
+title Diagrama de despliegue — ReservaYa (entorno local / pruebas)
+skinparam shadowing true
+skinparam linetype spline
+skinparam nodesep 30
+skinparam ranksep 52
+skinparam dpi 130
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowThickness 1
+skinparam ArrowColor #1B365D
+skinparam artifact {
+  BackgroundColor #FFF8E7
+  BorderColor #1B365D
+  FontSize 11
+  RoundCorner 3
+}
+skinparam node {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 12
+}
+skinparam rectangle {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 12
+}
+skinparam database {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 11
+}
+
+<style>
+  node {
+    Padding 22
+    Margin 6
+    HorizontalAlignment center
+  }
+  rectangle {
+    Padding 8
+    Margin 6
+    HorizontalAlignment center
+  }
+  artifact {
+    Padding 6
+    Margin 4
+    HorizontalAlignment center
+  }
+  database {
+    Padding 6
+    Margin 4
+    HorizontalAlignment center
+  }
+  arrow {
+    Padding 6
+  }
+</style>
+
+node "PC del desarrollador\n<size:10>«device»</size>" as PC {
+  rectangle "Navegador\n<size:10>«execution environment»</size>" as Browser {
+    artifact "SPA ReservaYa" as SPA
+  }
+
+  together {
+    rectangle "Node 22\n<size:10>«execution environment»</size>" as N22 {
+      artifact "pnpm dev :3000" as FE
+    }
+    rectangle "Rails / Puma\n<size:10>«execution environment»</size>" as Rails {
+      artifact "bin/dev  API :3100" as API
+    }
+  }
+
+  rectangle "Docker\n<size:10>«execution environment»</size>" as Docker {
+    database "PostgreSQL :5432" as DB
+  }
+}
+
+Browser --> N22 : HTTP :3000
+Browser --> Rails : HTTP :3100\nwithCredentials
+Rails --> Docker : TCP 5432
+
+@enduml

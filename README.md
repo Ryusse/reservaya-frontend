@@ -21,6 +21,14 @@ pnpm build      # build de producción
 pnpm start      # servir el build (.output/server/index.mjs)
 ```
 
+## Pruebas
+
+| Capa | Dónde | Cómo |
+|---|---|---|
+| Integrales (SPA + API) | [`docs/qa/pruebas-integrales.md`](docs/qa/pruebas-integrales.md) | Front `:3000` + API `:3100`, escenarios PI-00…PI-22 |
+| Funcionales de API (Sprint 1) | [`reservaya/docs/qa/sprint-1.md`](https://github.com/Ryusse/reservaya/blob/dev/docs/qa/sprint-1.md) | `bin/rails test` en el backend |
+| Unitarias del front | issue #9 (pendiente) | `pnpm test` (Vitest) |
+
 ## Variables de entorno
 
 Ver `src/env.ts` (validadas con `@t3-oss/env-core` + Zod) y `.env.example`.

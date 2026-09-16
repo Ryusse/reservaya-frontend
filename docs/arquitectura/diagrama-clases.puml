@@ -1,0 +1,106 @@
+@startuml ReservaYa_diagrama_clases
+hide circle
+skinparam shadowing false
+skinparam linetype polyline
+skinparam nodesep 60
+skinparam ranksep 50
+skinparam dpi 130
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 13
+  HeaderBackgroundColor #D6E3F0
+  AttributeFontSize 12
+  ArrowColor #1B365D
+}
+skinparam enum {
+  BackgroundColor #FFF8E7
+  BorderColor #1B365D
+  FontSize 12
+  HeaderBackgroundColor #F3E6C9
+}
+<style>
+  class {
+    Padding 10
+    Margin 10
+  }
+  enum {
+    Padding 8
+    Margin 8
+  }
+  arrow {
+    Padding 8
+  }
+</style>
+
+class User {
+  +id: Long
+  +name: String
+  +email: String {unique}
+  +password_digest: String
+  +role: Role
+  +created_at: DateTime
+  +updated_at: DateTime
+  --
+  +authenticate(password): Boolean
+}
+
+class Space {
+  +id: Long
+  +name: String
+  +location: String
+  +capacity: Integer {> 0}
+  +start_time: Time
+  +end_time: Time
+  +status: SpaceStatus
+  +space_type: SpaceType
+  +created_at: DateTime
+  +updated_at: DateTime
+}
+
+class Reservation {
+  +id: Long
+  +date: Date
+  +start_time: Time
+  +end_time: Time
+  +seats_reserved: Integer {≥ 1}
+  +status: ReservationStatus
+  +created_at: DateTime
+  +updated_at: DateTime
+  --
+  +confirmed(): Boolean
+  +cancelled(): Boolean
+}
+
+enum Role {
+  user = 0
+  admin = 1
+}
+
+enum SpaceStatus {
+  active = 0
+  inactive = 1
+}
+
+enum SpaceType {
+  private_space = 0
+  shared_space = 1
+}
+
+enum ReservationStatus {
+  confirmed = 0
+  cancelled = 1
+}
+
+User "1" -- "0..*" Reservation : realiza
+Space "1" -- "0..*" Reservation : recibe
+
+User .. Role
+Space .. SpaceStatus
+Space .. SpaceType
+Reservation .. ReservationStatus
+
+@enduml
