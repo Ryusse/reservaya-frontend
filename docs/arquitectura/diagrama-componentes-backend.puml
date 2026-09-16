@@ -1,0 +1,74 @@
+@startuml ReservaYa_diagrama_componentes_backend
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam linetype ortho
+skinparam nodesep 40
+skinparam ranksep 42
+skinparam dpi 130
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowColor #1B365D
+skinparam component {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 12
+}
+skinparam package {
+  BackgroundColor #F7F9FC
+  BorderColor #1B365D
+  FontSize 13
+  FontColor #1B365D
+}
+skinparam database {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 12
+}
+
+<style>
+  component {
+    Padding 8
+    Margin 6
+  }
+  package {
+    Padding 12
+    Margin 8
+  }
+  arrow {
+    Padding 6
+  }
+</style>
+
+package "reservaya (API)" {
+  [SessionsController] as Sessions
+  [UsersController] as Users
+  [SpacesController] as Spaces
+  [ReservationsController] as Reservations
+  [DashboardController] as Dashboard
+  [JsonWebToken] as JWT
+  [User] as User
+  [Space] as Space
+  [Reservation] as Reservation
+
+  Sessions -[hidden]right- Users
+  Users -[hidden]right- Spaces
+  Spaces -[hidden]right- Reservations
+  Reservations -[hidden]right- Dashboard
+}
+
+database "PostgreSQL" as DB
+
+Sessions --> JWT
+Sessions --> User
+Users --> User
+Spaces --> Space
+Reservations --> Reservation
+Reservations --> Space
+Reservations --> User
+Dashboard --> Reservation
+Dashboard --> Space
+User --> DB
+Space --> DB
+Reservation --> DB
+
+@enduml
