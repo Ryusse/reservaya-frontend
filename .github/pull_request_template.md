@@ -24,3 +24,6 @@ Closes #
 
 - [ ] Frontend
 - [ ] Infra / config
+- [ ] QA
+
+<!-- Antes de abrir: asignar a @Ryusse y aplicar labels type:*, area:*, sprint:* (y epic:* si aplica) -->

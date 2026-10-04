@@ -8,8 +8,26 @@ y **Chakra UI v3**, consumiendo la API REST de [reservaya](https://github.com/Ry
 
 ```bash
 pnpm install
-pnpm dev        # http://localhost:3000
+cp .env.example .env    # ajustar VITE_API_URL si hace falta
+pnpm dev                # http://localhost:3000
 ```
+
+Este repo solo levanta la SPA. La API (`reservaya`, Rails) corre aparte, vía Docker — pasos
+detallados y precisos (terminal y Docker Desktop) en el
+[`README`](https://github.com/Ryusse/reservaya/blob/main/README.md) de ese repo. Resumen mínimo:
+
+```bash
+cd ../reservaya   # o donde tengas clonado el backend
+docker compose up -d
+docker exec -it reservaya-backend-api-1 bin/rails db:prepare
+docker exec -d reservaya-backend-api-1 bin/rails server -b 0.0.0.0
+curl http://localhost:3301/up   # debe responder 200
+```
+
+Con el backend arriba en `:3301` (el puerto que publica `compose.yml` de ese repo) y el front en
+`:3000`, `VITE_API_URL=http://localhost:3301` (default de `.env.example`) ya queda andando —
+ambos son `localhost`, solo cambia el puerto, así que la cookie de sesión (`SameSite=Lax` en
+local) viaja sin problema entre los dos.
 
 ## Scripts
 
@@ -35,7 +53,7 @@ Ver `src/env.ts` (validadas con `@t3-oss/env-core` + Zod) y `.env.example`.
 
 | Variable | Uso |
 |---|---|
-| `VITE_API_URL` | Base URL de la API de `reservaya`. Default de desarrollo: `http://localhost:3100`. En producción, la URL del servicio de Railway del backend. |
+| `VITE_API_URL` | Base URL de la API de `reservaya`. Default de desarrollo: `http://localhost:3301` (puerto que publica el `compose.yml` del backend). En producción, la URL del servicio de Railway del backend. |
 | `VITE_APP_TITLE` | Opcional, título de la app. |
 
 ## Despliegue (Railway)

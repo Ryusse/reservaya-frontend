@@ -1,4 +1,4 @@
-import type { NewSpace, Space, SpaceStatus } from "#/models/space";
+import type { NewSpace, Space, SpaceStatus, SpaceType } from "#/models/space";
 
 export type SpaceResponse = {
 	id: number;
@@ -8,6 +8,7 @@ export type SpaceResponse = {
 	start_time: string | null;
 	end_time: string | null;
 	status: string;
+	space_type: string;
 };
 
 export function toSpace(data: SpaceResponse): Space {
@@ -19,6 +20,9 @@ export function toSpace(data: SpaceResponse): Space {
 		startTime: data.start_time,
 		endTime: data.end_time,
 		status: (data.status === "inactive" ? "inactive" : "active") as SpaceStatus,
+		spaceType: (data.space_type === "private_space"
+			? "private_space"
+			: "shared_space") as SpaceType,
 	};
 }
 

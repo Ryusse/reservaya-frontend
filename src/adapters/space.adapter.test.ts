@@ -13,6 +13,7 @@ describe("space.adapter", () => {
 			start_time: "08:00",
 			end_time: "20:00",
 			status: "active",
+			space_type: "shared_space",
 		});
 
 		expect(result).toEqual({
@@ -23,6 +24,7 @@ describe("space.adapter", () => {
 			startTime: "08:00",
 			endTime: "20:00",
 			status: "active",
+			spaceType: "shared_space",
 		});
 	});
 
@@ -35,11 +37,13 @@ describe("space.adapter", () => {
 			start_time: null,
 			end_time: null,
 			status: "weird",
+			space_type: "weird",
 		});
 
 		expect(result.status).toBe("active");
 		expect(result.startTime).toBeNull();
 		expect(result.endTime).toBeNull();
+		expect(result.spaceType).toBe("shared_space");
 	});
 
 	it("toSpace keeps an inactive status", () => {
@@ -51,9 +55,11 @@ describe("space.adapter", () => {
 			start_time: null,
 			end_time: null,
 			status: "inactive",
+			space_type: "private_space",
 		});
 
 		expect(result.status).toBe("inactive");
+		expect(result.spaceType).toBe("private_space");
 	});
 
 	it("toSpacePayload wraps values under space without forcing a status", () => {
@@ -85,6 +91,7 @@ describe("space.adapter", () => {
 			startTime: null,
 			endTime: null,
 			status: "active",
+			spaceType: "shared_space",
 		};
 
 		expect(toSpaceInput(space)).toEqual({
