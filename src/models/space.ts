@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export type SpaceStatus = "active" | "inactive";
+export type SpaceType = "private_space" | "shared_space";
 
 export type Space = {
 	id: number;
@@ -10,6 +11,7 @@ export type Space = {
 	startTime: string | null;
 	endTime: string | null;
 	status: SpaceStatus;
+	spaceType: SpaceType;
 };
 
 export const newSpaceSchema = z.object({
