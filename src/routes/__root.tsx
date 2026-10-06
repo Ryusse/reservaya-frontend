@@ -27,17 +27,7 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-	beforeLoad: async () => {
-		// Solo bloqueamos y verificamos la sesión en el cliente
-		if (typeof document !== "undefined" && sessionStore.state.status === "loading") {
-			try {
-				const user = await authService.me();
-				setUser(user);
-			} catch {
-				clearUser();
-			}
-		}
-
+	beforeLoad: () => {
 		const { user } = sessionStore.state;
 		const auth: SessionInfo = {
 			user,
@@ -66,6 +56,11 @@ function RootComponent() {
 
 	useApiErrors();
 
+	// Restaura el fetch asíncrono para que ocurra al hidratar en el cliente
+	useEffect(() => {
+		authService.me().then(setUser).catch(clearUser);
+	}, []);
+
 	// Invalida el router si cambia el auth state client-side
 	useEffect(() => {
 		if (status === "ready") router.invalidate();
@@ -73,7 +68,14 @@ function RootComponent() {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			<Outlet />
+			{/* Muestra un spinner si el estado de sesión aún no se resuelve para evitar renders incompletos o flashes de hidratación */}
+			{status === "loading" ? (
+				<Center h="100dvh">
+					<Spinner size="xl" />
+				</Center>
+			) : (
+				<Outlet />
+			)}
 		</QueryClientProvider>
 	);
 }
