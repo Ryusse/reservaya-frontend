@@ -32,7 +32,7 @@ export function UserSpaceAvailabilityPage() {
 		<Stack gap="8" maxW="4xl">
 			<Heading size="2xl">Reservar espacio</Heading>
 
-			<Stack direction={{ base: "column", md: "row" }} gap="6" align="flex-start">
+			<Stack direction={{ base: "column", md: "row" }} gap="6" align="stretch">
 				<Flex flex="1">
 					<Field.Root>
 						<Field.Label>1. Elige un espacio</Field.Label>
