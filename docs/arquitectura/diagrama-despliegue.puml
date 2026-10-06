@@ -1,0 +1,90 @@
+@startuml ReservaYa_despliegue_produccion
+title Diagrama de despliegue UML — ReservaYa (producción)
+left to right direction
+skinparam shadowing true
+skinparam linetype polyline
+skinparam nodesep 80
+skinparam ranksep 90
+skinparam dpi 120
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam ArrowThickness 1.1
+skinparam ArrowColor #1B365D
+skinparam artifact {
+  BackgroundColor #FFF8E7
+  BorderColor #1B365D
+  FontSize 12
+  RoundCorner 4
+}
+skinparam node {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 13
+}
+skinparam database {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 13
+}
+skinparam legend {
+  BackgroundColor #F7F9FC
+  BorderColor #1B365D
+  FontSize 12
+  RoundCorner 6
+}
+
+<style>
+  node {
+    Padding 12
+    Margin 10
+  }
+  artifact {
+    Padding 8
+    Margin 6
+  }
+  database {
+    Padding 10
+    Margin 8
+  }
+  arrow {
+    Padding 6
+  }
+  legend {
+    Padding 10
+    Margin 12
+  }
+</style>
+
+node "Dispositivo del usuario\n«device»" as Client {
+  node "Navegador web\n«execution environment»" as Browser {
+    artifact "SPA ReservaYa\n(HTML / JS)" as SPA
+  }
+}
+
+node "Nube Railway\n«device»" as Railway {
+  node "Servicio frontend\n«execution environment»\nNode 22 · Railpack" as FE {
+    artifact "reservaya-frontend\nindex.mjs" as FEArt
+  }
+
+  node "Servicio API\n«execution environment»\nRails · Puma" as API {
+    artifact "reservaya\nAPI REST JSON" as APIArt
+  }
+
+  database "PostgreSQL\n«execution environment»" as DB {
+    artifact "BD reservaya_production" as DBArt
+  }
+}
+
+SPA --> FEArt : HTTPS\n(carga de páginas)
+SPA --> APIArt : HTTPS REST\n+ cookie de sesión
+APIArt --> DBArt : TCP 5432
+
+legend bottom
+  **Comunicación**
+  • Navegador → frontend: HTTPS (HTML/JS/SSR)
+  • Navegador → API: HTTPS REST, cookie httpOnly (SameSite=None; Secure, CORS)
+  • API → PostgreSQL: TCP 5432 (DATABASE_URL)
+  • Repos independientes (RNF07): reservaya-frontend y reservaya
+endlegend
+
+@enduml

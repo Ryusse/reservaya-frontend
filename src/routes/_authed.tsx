@@ -4,7 +4,8 @@ import { AppShell } from "#/components/layout/app-shell";
 
 export const Route = createFileRoute("/_authed")({
 	beforeLoad: ({ context }) => {
-		if (!context.auth.isAuthenticated) {
+		// Evitamos redirigir desde el servidor (SSR) porque no tiene las cookies del usuario
+		if (typeof document !== "undefined" && !context.auth.isAuthenticated) {
 			throw redirect({ to: "/login" });
 		}
 	},

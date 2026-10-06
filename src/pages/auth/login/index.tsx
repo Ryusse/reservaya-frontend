@@ -3,6 +3,7 @@ import { Link as RouterLink } from "@tanstack/react-router";
 
 import { useAppForm } from "#/hooks/form";
 import { useLogin } from "#/hooks/use-login";
+import { apiErrors } from "#/lib/api-error";
 import { credentialsSchema } from "#/models/credentials";
 
 export function LoginPage() {
@@ -48,9 +49,13 @@ export function LoginPage() {
 							</form.AppField>
 
 							{login.isError ? (
-								<Text color="fg.error" fontSize="sm">
-									Correo o contraseña inválidos
-								</Text>
+								<Stack gap="1">
+									{apiErrors(login.error).map((message) => (
+										<Text key={message} color="fg.error" fontSize="sm">
+											{message}
+										</Text>
+									))}
+								</Stack>
 							) : null}
 
 							<form.AppForm>

@@ -16,9 +16,10 @@ function fieldErrorMessage(errors: unknown[]): string {
 type NumberFieldProps = {
 	label: string;
 	min?: number;
+	max?: number;
 };
 
-export function NumberField({ label, min }: NumberFieldProps) {
+export function NumberField({ label, min, max }: NumberFieldProps) {
 	const field = useFieldContext<number>();
 	const errors = field.state.meta.errors;
 	const invalid = field.state.meta.isTouched && errors.length > 0;
@@ -29,6 +30,7 @@ export function NumberField({ label, min }: NumberFieldProps) {
 			<Input
 				type="number"
 				min={min}
+				max={max}
 				value={field.state.value}
 				onChange={(event) => field.handleChange(Number(event.target.value))}
 				onBlur={field.handleBlur}

@@ -14,6 +14,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AuthedIndexRouteImport } from './routes/_authed/index'
 import { Route as AuthedAdminRouteImport } from './routes/_authed/admin'
+import { Route as AuthedSpacesRouteImport } from './routes/_authed/spaces'
 
 const AuthedRoute = AuthedRouteImport.update({
   id: '/_authed',
@@ -39,17 +40,24 @@ const AuthedAdminRoute = AuthedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedSpacesRoute = AuthedSpacesRouteImport.update({
+  id: '/spaces',
+  path: '/spaces',
+  getParentRoute: () => AuthedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthedIndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/admin': typeof AuthedAdminRoute
+  '/spaces': typeof AuthedSpacesRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/admin': typeof AuthedAdminRoute
+  '/spaces': typeof AuthedSpacesRoute
   '/': typeof AuthedIndexRoute
 }
 export interface FileRoutesById {
@@ -58,19 +66,21 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/_authed/admin': typeof AuthedAdminRoute
+  '/_authed/spaces': typeof AuthedSpacesRoute
   '/_authed/': typeof AuthedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/admin'
+  fullPaths: '/' | '/login' | '/register' | '/admin' | '/spaces'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/admin' | '/'
+  to: '/login' | '/register' | '/admin' | '/spaces' | '/'
   id:
     | '__root__'
     | '/_authed'
     | '/login'
     | '/register'
     | '/_authed/admin'
+    | '/_authed/spaces'
     | '/_authed/'
   fileRoutesById: FileRoutesById
 }
@@ -117,16 +127,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedAdminRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/spaces': {
+      id: '/_authed/spaces'
+      path: '/spaces'
+      fullPath: '/spaces'
+      preLoaderRoute: typeof AuthedSpacesRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
 interface AuthedRouteChildren {
   AuthedAdminRoute: typeof AuthedAdminRoute
+  AuthedSpacesRoute: typeof AuthedSpacesRoute
   AuthedIndexRoute: typeof AuthedIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedAdminRoute: AuthedAdminRoute,
+  AuthedSpacesRoute: AuthedSpacesRoute,
   AuthedIndexRoute: AuthedIndexRoute,
 }
 

@@ -1,0 +1,80 @@
+@startuml ReservaYa_diagrama_componentes
+left to right direction
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam linetype ortho
+skinparam nodesep 70
+skinparam ranksep 70
+skinparam dpi 130
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowColor #1B365D
+skinparam component {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 12
+}
+skinparam interface {
+  BackgroundColor #FFF8E7
+  BorderColor #1B365D
+  FontSize 12
+}
+skinparam package {
+  BackgroundColor #F7F9FC
+  BorderColor #1B365D
+  FontSize 13
+  FontColor #1B365D
+}
+skinparam database {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 12
+}
+
+<style>
+  component {
+    Padding 10
+    Margin 8
+  }
+  package {
+    Padding 16
+    Margin 12
+  }
+  interface {
+    Padding 14
+    Margin 16
+  }
+  arrow {
+    Padding 12
+  }
+</style>
+
+package "reservaya-frontend" {
+  [Pages / UI] as UI
+  [Hooks + Store] as Hooks
+  [Services] as Svc
+  [HTTP client] as HTTP
+  UI -down-> Hooks
+  Hooks -down-> Svc
+  Svc -down-> HTTP
+}
+
+interface "REST JSON" as IAPI
+
+package "reservaya (API Rails)" {
+  [Controladores REST] as Ctrl
+  [JsonWebToken] as JWT
+  [Modelos] as Models
+  Ctrl -down-> JWT
+  Ctrl -down-> Models
+}
+
+interface "SQL" as ISQL
+database "PostgreSQL" as DB
+
+HTTP -right-( IAPI
+IAPI -right- Ctrl
+Models -down-( ISQL
+ISQL -down- DB
+
+@enduml

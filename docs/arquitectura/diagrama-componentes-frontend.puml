@@ -1,0 +1,69 @@
+@startuml ReservaYa_diagrama_componentes_frontend
+skinparam shadowing false
+skinparam componentStyle uml2
+skinparam linetype polyline
+skinparam nodesep 34
+skinparam ranksep 36
+skinparam dpi 130
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam ArrowColor #1B365D
+skinparam component {
+  BackgroundColor #E8F1FA
+  BorderColor #1B365D
+  FontSize 12
+}
+skinparam package {
+  BackgroundColor #F7F9FC
+  BorderColor #1B365D
+  FontSize 13
+  FontColor #1B365D
+}
+
+<style>
+  component {
+    Padding 8
+    Margin 6
+  }
+  package {
+    Padding 12
+    Margin 8
+  }
+  arrow {
+    Padding 6
+  }
+</style>
+
+package "reservaya-frontend" {
+  package "Presentación" {
+    [routes] as Routes
+    [pages] as Pages
+    [components] as Comp
+    Routes --> Pages
+    Pages --> Comp
+  }
+
+  package "Aplicación" {
+    [hooks] as Hooks
+    [stores] as Store
+    [services] as Services
+    Hooks --> Store
+    Hooks --> Services
+  }
+
+  package "Infraestructura" {
+    [adapters] as Adapters
+    [models] as Models
+    [lib/http] as HTTP
+    Adapters --> Models
+  }
+
+  Pages --> Hooks
+  Services --> Adapters
+  Services --> HTTP
+}
+
+[API Rails] as API
+HTTP --> API
+
+@enduml
