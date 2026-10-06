@@ -52,7 +52,7 @@ export function UserSpaceAvailabilityPage() {
 						{(field) => (
 							<field.SelectField label="Espacio">
 								<option value={0} disabled>
-									Elegí un espacio
+									Elige un espacio
 								</option>
 								{spaces.data?.map((space) => (
 									<option key={space.id} value={space.id}>
