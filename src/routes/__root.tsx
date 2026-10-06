@@ -15,9 +15,13 @@ import { useEffect } from "react";
 import { Provider } from "#/components/ui/provider";
 import { useApiErrors } from "#/hooks/use-api-errors";
 import type { SessionInfo } from "#/hooks/use-session";
-import { useSession } from "#/hooks/use-session";
 import { authService } from "#/services/auth.service";
-import { sessionStore, setUser, useSessionStore } from "#/stores/session.store";
+import {
+	clearUser,
+	sessionStore,
+	setUser,
+	useSessionStore,
+} from "#/stores/session.store";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
@@ -51,22 +55,23 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootComponent() {
 	const { queryClient } = Route.useRouteContext();
 	const router = useRouter();
-	const auth = useSession();
 	const status = useSessionStore((s) => s.status);
 
 	useApiErrors();
 
+	// Restaura el fetch asíncrono para que ocurra al hidratar en el cliente
 	useEffect(() => {
-		authService.me().then(setUser);
+		authService.me().then(setUser).catch(clearUser);
 	}, []);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: re-run only when auth or status changes, not on every router identity change
+	// Invalida el router si cambia el auth state client-side
 	useEffect(() => {
 		if (status === "ready") router.invalidate();
-	}, [auth.isAuthenticated, auth.role, status]);
+	}, [status, router]);
 
 	return (
 		<QueryClientProvider client={queryClient}>
+			{/* Muestra un spinner si el estado de sesión aún no se resuelve para evitar renders incompletos o flashes de hidratación */}
 			{status === "loading" ? (
 				<Center h="100dvh">
 					<Spinner size="xl" />

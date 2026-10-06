@@ -1,6 +1,6 @@
 import type { Space } from "#/models/space";
 
-export type AvailabilityBlockStatus = "available" | "booked";
+export type AvailabilityBlockStatus = "free" | "partial" | "full";
 
 export type AvailabilityBlock = {
 	startTime: string;

@@ -1,16 +1,19 @@
-import { Heading, Spinner, Stack, Text } from "@chakra-ui/react";
+import {
+	Field,
+	Flex,
+	Heading,
+	Input,
+	NativeSelect,
+	Spinner,
+	Stack,
+	Text,
+} from "@chakra-ui/react";
 import { useState } from "react";
 
 import { AvailabilityView } from "#/components/spaces/availability-view";
-import { useAppForm } from "#/hooks/form";
 import { useSpaceAvailability } from "#/hooks/use-space-availability";
 import { useSpaces } from "#/hooks/use-spaces";
 import { apiErrors } from "#/lib/api-error";
-
-type AvailabilityQuery = {
-	spaceId: number;
-	date: string;
-};
 
 function today(): string {
 	return new Date().toISOString().slice(0, 10);
@@ -24,62 +27,58 @@ function maxAdvanceDate(): string {
 
 export function UserSpaceAvailabilityPage() {
 	const spaces = useSpaces();
-	const [query, setQuery] = useState<AvailabilityQuery | null>(null);
 
-	const form = useAppForm({
-		defaultValues: { spaceId: 0, date: today() } as AvailabilityQuery,
-		onSubmit: ({ value }) => setQuery(value),
-	});
+	const [spaceId, setSpaceId] = useState<number>(0);
+	const [date, setDate] = useState<string>(today());
 
 	const availability = useSpaceAvailability(
-		query?.spaceId ?? 0,
-		query?.date ?? "",
-		query !== null,
+		spaceId,
+		date,
+		spaceId !== 0 && date !== "",
 	);
 
 	return (
-		<Stack gap="6" maxW="2xl">
-			<Heading size="2xl">Disponibilidad de espacios</Heading>
+		<Stack gap="8" maxW="4xl">
+			<Heading size="2xl">Reservar espacio</Heading>
 
-			<form
-				onSubmit={(event) => {
-					event.preventDefault();
-					form.handleSubmit();
-				}}
-			>
-				<Stack gap="4">
-					<form.AppField name="spaceId">
-						{(field) => (
-							<field.SelectField label="Espacio">
+			<Stack direction={{ base: "column", md: "row" }} gap="6" align="stretch">
+				<Flex flex="1">
+					<Field.Root>
+						<Field.Label>1. Elige un espacio</Field.Label>
+						<NativeSelect.Root>
+							<NativeSelect.Field
+								value={spaceId}
+								onChange={(e) => setSpaceId(Number(e.target.value))}
+							>
 								<option value={0} disabled>
-									Elegí un espacio
+									Selecciona una sala...
 								</option>
 								{spaces.data?.map((space) => (
 									<option key={space.id} value={space.id}>
 										{space.name}
 									</option>
 								))}
-							</field.SelectField>
-						)}
-					</form.AppField>
-					<form.AppField name="date">
-						{(field) => (
-							<field.TextField
-								label="Fecha"
-								type="date"
-								min={today()}
-								max={maxAdvanceDate()}
-							/>
-						)}
-					</form.AppField>
+							</NativeSelect.Field>
+							<NativeSelect.Indicator />
+						</NativeSelect.Root>
+					</Field.Root>
+				</Flex>
 
-					<form.AppForm>
-						<form.SubmitButton>Consultar</form.SubmitButton>
-					</form.AppForm>
-				</Stack>
-			</form>
+				<Flex flex="1">
+					<Field.Root>
+						<Field.Label>2. Selecciona la fecha</Field.Label>
+						<Input
+							type="date"
+							min={today()}
+							max={maxAdvanceDate()}
+							value={date}
+							onChange={(e) => setDate(e.target.value)}
+						/>
+					</Field.Root>
+				</Flex>
+			</Stack>
 
-			{query === null ? null : availability.isPending ? (
+			{spaceId === 0 ? null : availability.isPending ? (
 				<Spinner />
 			) : availability.isError ? (
 				<Stack gap="1">
@@ -90,7 +89,13 @@ export function UserSpaceAvailabilityPage() {
 					))}
 				</Stack>
 			) : (
-				<AvailabilityView availability={availability.data} />
+				<Stack gap="4">
+					<Heading size="md" color="fg.muted">
+						Horarios disponibles
+					</Heading>
+					<AvailabilityView availability={availability.data} />
+					{/* Aquí irá la tabla CRUD de reservas en la próxima HU */}
+				</Stack>
 			)}
 		</Stack>
 	);

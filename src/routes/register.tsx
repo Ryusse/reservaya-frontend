@@ -4,7 +4,7 @@ import { RegisterPage } from "#/pages/auth/register";
 
 export const Route = createFileRoute("/register")({
 	beforeLoad: ({ context }) => {
-		if (context.auth.isAuthenticated) {
+		if (typeof document !== "undefined" && context.auth.isAuthenticated) {
 			throw redirect({ to: "/" });
 		}
 	},

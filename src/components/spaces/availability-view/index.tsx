@@ -13,33 +13,36 @@ export function AvailabilityView({ availability }: AvailabilityViewProps) {
 
 	return (
 		<Stack gap="2">
-			{availability.blocks.map((block) => (
-				<Flex
-					key={`${block.startTime}-${block.endTime}`}
-					justify="space-between"
-					align="center"
-					borderWidth="1px"
-					rounded="md"
-					px="4"
-					py="2"
-				>
-					<Text>
-						{block.startTime}–{block.endTime}
-					</Text>
-					<Flex align="center" gap="3">
-						{block.seatsAvailable !== undefined ? (
-							<Text color="fg.muted" fontSize="sm">
-								{block.seatsAvailable} cupos disponibles
-							</Text>
-						) : null}
-						<Badge
-							colorPalette={block.status === "available" ? "green" : "red"}
-						>
-							{block.status === "available" ? "Disponible" : "Ocupado"}
-						</Badge>
+			{availability.blocks.map((block) => {
+				const isFree = block.status === "free";
+				const isPartial = block.status === "partial";
+				const colorPalette = isFree ? "green" : isPartial ? "yellow" : "red";
+				const label = isFree ? "Disponible" : isPartial ? "Parcial" : "Ocupado";
+
+				return (
+					<Flex
+						key={`${block.startTime}-${block.endTime}`}
+						justify="space-between"
+						align="center"
+						borderWidth="1px"
+						rounded="md"
+						px="4"
+						py="2"
+					>
+						<Text>
+							{block.startTime}–{block.endTime}
+						</Text>
+						<Flex align="center" gap="3">
+							{block.seatsAvailable !== undefined ? (
+								<Text color="fg.muted" fontSize="sm">
+									{block.seatsAvailable} cupos disponibles
+								</Text>
+							) : null}
+							<Badge colorPalette={colorPalette}>{label}</Badge>
+						</Flex>
 					</Flex>
-				</Flex>
-			))}
+				);
+			})}
 		</Stack>
 	);
 }
