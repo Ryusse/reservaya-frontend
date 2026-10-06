@@ -17,7 +17,7 @@ import { useApiErrors } from "#/hooks/use-api-errors";
 import type { SessionInfo } from "#/hooks/use-session";
 import { useSession } from "#/hooks/use-session";
 import { authService } from "#/services/auth.service";
-import { sessionStore, setUser, useSessionStore } from "#/stores/session.store";
+import { clearUser, sessionStore, setUser, useSessionStore } from "#/stores/session.store";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
@@ -27,7 +27,16 @@ interface MyRouterContext {
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-	beforeLoad: () => {
+	beforeLoad: async () => {
+		if (sessionStore.state.status === "loading") {
+			try {
+				const user = await authService.me();
+				setUser(user);
+			} catch {
+				clearUser();
+			}
+		}
+
 		const { user } = sessionStore.state;
 		const auth: SessionInfo = {
 			user,
@@ -56,10 +65,6 @@ function RootComponent() {
 
 	useApiErrors();
 
-	useEffect(() => {
-		authService.me().then(setUser);
-	}, []);
-
 	// biome-ignore lint/correctness/useExhaustiveDependencies: re-run only when auth or status changes, not on every router identity change
 	useEffect(() => {
 		if (status === "ready") router.invalidate();
@@ -67,13 +72,7 @@ function RootComponent() {
 
 	return (
 		<QueryClientProvider client={queryClient}>
-			{status === "loading" ? (
-				<Center h="100dvh">
-					<Spinner size="xl" />
-				</Center>
-			) : (
-				<Outlet />
-			)}
+			<Outlet />
 		</QueryClientProvider>
 	);
 }
