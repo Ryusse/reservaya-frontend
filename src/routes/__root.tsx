@@ -28,7 +28,8 @@ interface MyRouterContext {
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
 	beforeLoad: async () => {
-		if (sessionStore.state.status === "loading") {
+		// Solo bloqueamos y verificamos la sesión en el cliente
+		if (typeof document !== "undefined" && sessionStore.state.status === "loading") {
 			try {
 				const user = await authService.me();
 				setUser(user);
@@ -65,10 +66,10 @@ function RootComponent() {
 
 	useApiErrors();
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: re-run only when auth or status changes, not on every router identity change
+	// Invalida el router si cambia el auth state client-side
 	useEffect(() => {
 		if (status === "ready") router.invalidate();
-	}, [auth.isAuthenticated, auth.role, status]);
+	}, [auth.isAuthenticated, auth.role, status, router]);
 
 	return (
 		<QueryClientProvider client={queryClient}>
