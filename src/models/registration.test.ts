@@ -7,7 +7,7 @@ describe("registrationSchema (HU03 · Registro de nuevo usuario)", () => {
 		const result = registrationSchema.safeParse({
 			name: "Ana Pérez",
 			email: "ana@example.com",
-			password: "secreto123",
+			password: "Secreto123",
 		});
 
 		expect(result.success).toBe(true);
@@ -17,7 +17,7 @@ describe("registrationSchema (HU03 · Registro de nuevo usuario)", () => {
 		const result = registrationSchema.safeParse({
 			name: "   ",
 			email: "ana@example.com",
-			password: "secreto123",
+			password: "Secreto123",
 		});
 
 		expect(result.success).toBe(false);
@@ -27,7 +27,7 @@ describe("registrationSchema (HU03 · Registro de nuevo usuario)", () => {
 		const result = registrationSchema.safeParse({
 			name: "Ana",
 			email: "no-es-un-correo",
-			password: "secreto123",
+			password: "Secreto123",
 		});
 
 		expect(result.success).toBe(false);
