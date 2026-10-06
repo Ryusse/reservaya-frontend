@@ -30,8 +30,10 @@ export function AvailabilityView({
 				return (
 					<Flex
 						key={`${block.startTime}-${block.endTime}`}
+						direction={{ base: "column", md: "row" }}
 						justify="space-between"
-						align="center"
+						align={{ base: "stretch", md: "center" }}
+						gap="3"
 						borderWidth="1px"
 						rounded="md"
 						px="4"
@@ -40,13 +42,22 @@ export function AvailabilityView({
 						<Text>
 							{block.startTime}–{block.endTime}
 						</Text>
-						<Flex align="center" gap="3">
+						<Flex
+							align={{ base: "stretch", md: "center" }}
+							direction={{ base: "column", md: "row" }}
+							gap="3"
+						>
 							{block.seatsAvailable !== undefined ? (
 								<Text color="fg.muted" fontSize="sm">
 									{block.seatsAvailable} cupos disponibles
 								</Text>
 							) : null}
-							<Badge colorPalette={colorPalette}>{label}</Badge>
+							<Badge
+								colorPalette={colorPalette}
+								alignSelf={{ base: "flex-start", md: "center" }}
+							>
+								{label}
+							</Badge>
 							{isReservable ? (
 								<Button size="sm" onClick={() => onReserve(block)}>
 									Reservar este horario
