@@ -43,7 +43,7 @@ describe("UserSpaceAvailabilityPage", () => {
 
 		renderPage();
 
-		expect(screen.getByText("Disponibilidad de espacios")).toBeInTheDocument();
+		expect(screen.getByText("Reservar espacio")).toBeInTheDocument();
 
 		// Wait for the spaces to load in the select
 		await waitFor(() => {

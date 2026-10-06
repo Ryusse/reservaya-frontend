@@ -12,7 +12,7 @@ export type NavItem = {
 
 export const navItems: NavItem[] = [
 	{ label: "Inicio", to: "/", icon: House, roles: [Role.User] },
-	{ label: "Disponibilidad", to: "/spaces", icon: Calendar, roles: [Role.User] },
+	{ label: "Reservar", to: "/spaces", icon: Calendar, roles: [Role.User] },
 	{ label: "Espacios", to: "/admin", icon: Building2, roles: [Role.Admin] },
 ];
 
