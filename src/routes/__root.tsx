@@ -15,7 +15,6 @@ import { useEffect } from "react";
 import { Provider } from "#/components/ui/provider";
 import { useApiErrors } from "#/hooks/use-api-errors";
 import type { SessionInfo } from "#/hooks/use-session";
-import { useSession } from "#/hooks/use-session";
 import { authService } from "#/services/auth.service";
 import {
 	clearUser,
@@ -56,7 +55,6 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootComponent() {
 	const { queryClient } = Route.useRouteContext();
 	const router = useRouter();
-	const _auth = useSession();
 	const status = useSessionStore((s) => s.status);
 
 	useApiErrors();
