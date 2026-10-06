@@ -1,5 +1,5 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 import { Provider } from "#/components/ui/provider";
 import type { SpaceAvailability } from "#/models/availability";
@@ -25,7 +25,9 @@ describe("AvailabilityView", () => {
 			blocks: [],
 		};
 
-		render(<AvailabilityView availability={data} />, { wrapper: Provider });
+		render(<AvailabilityView availability={data} onReserve={vi.fn()} />, {
+			wrapper: Provider,
+		});
 
 		expect(
 			screen.getByText("Este espacio no está disponible."),
@@ -59,7 +61,10 @@ describe("AvailabilityView", () => {
 			],
 		};
 
-		render(<AvailabilityView availability={data} />, { wrapper: Provider });
+		const onReserve = vi.fn();
+		render(<AvailabilityView availability={data} onReserve={onReserve} />, {
+			wrapper: Provider,
+		});
 
 		// Check times
 		expect(screen.getByText("08:00–10:00")).toBeInTheDocument();
@@ -75,5 +80,13 @@ describe("AvailabilityView", () => {
 		expect(screen.getByText("Disponible")).toBeInTheDocument();
 		expect(screen.getByText("Parcial")).toBeInTheDocument();
 		expect(screen.getByText("Ocupado")).toBeInTheDocument();
+
+		const reserveButtons = screen.getAllByRole("button", {
+			name: "Reservar este horario",
+		});
+		expect(reserveButtons).toHaveLength(2);
+
+		fireEvent.click(reserveButtons[0]);
+		expect(onReserve).toHaveBeenCalledWith(data.blocks[0]);
 	});
 });

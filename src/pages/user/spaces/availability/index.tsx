@@ -9,11 +9,12 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-
+import { ReservationModal } from "#/components/reservations/reservation-modal";
 import { AvailabilityView } from "#/components/spaces/availability-view";
 import { useSpaceAvailability } from "#/hooks/use-space-availability";
 import { useSpaces } from "#/hooks/use-spaces";
 import { apiErrors } from "#/lib/api-error";
+import type { AvailabilityBlock } from "#/models/availability";
 
 function today(): string {
 	return new Date().toISOString().slice(0, 10);
@@ -30,6 +31,8 @@ export function UserSpaceAvailabilityPage() {
 
 	const [spaceId, setSpaceId] = useState<number>(0);
 	const [date, setDate] = useState<string>(today());
+	const [reservingBlock, setReservingBlock] =
+		useState<AvailabilityBlock | null>(null);
 
 	const availability = useSpaceAvailability(
 		spaceId,
@@ -93,10 +96,22 @@ export function UserSpaceAvailabilityPage() {
 					<Heading size="md" color="fg.muted">
 						Horarios disponibles
 					</Heading>
-					<AvailabilityView availability={availability.data} />
+					<AvailabilityView
+						availability={availability.data}
+						onReserve={setReservingBlock}
+					/>
 					{/* Aquí irá la tabla CRUD de reservas en la próxima HU */}
 				</Stack>
 			)}
+
+			{availability.data ? (
+				<ReservationModal
+					space={availability.data.space}
+					date={date}
+					block={reservingBlock}
+					onClose={() => setReservingBlock(null)}
+				/>
+			) : null}
 		</Stack>
 	);
 }

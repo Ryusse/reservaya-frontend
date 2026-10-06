@@ -1,12 +1,19 @@
-import { Badge, Flex, Stack, Text } from "@chakra-ui/react";
+import { Badge, Button, Flex, Stack, Text } from "@chakra-ui/react";
 
-import type { SpaceAvailability } from "#/models/availability";
+import type {
+	AvailabilityBlock,
+	SpaceAvailability,
+} from "#/models/availability";
 
 type AvailabilityViewProps = {
 	availability: SpaceAvailability;
+	onReserve: (block: AvailabilityBlock) => void;
 };
 
-export function AvailabilityView({ availability }: AvailabilityViewProps) {
+export function AvailabilityView({
+	availability,
+	onReserve,
+}: AvailabilityViewProps) {
 	if (!availability.available) {
 		return <Text color="fg.muted">Este espacio no está disponible.</Text>;
 	}
@@ -16,6 +23,7 @@ export function AvailabilityView({ availability }: AvailabilityViewProps) {
 			{availability.blocks.map((block) => {
 				const isFree = block.status === "free";
 				const isPartial = block.status === "partial";
+				const isReservable = isFree || isPartial;
 				const colorPalette = isFree ? "green" : isPartial ? "yellow" : "red";
 				const label = isFree ? "Disponible" : isPartial ? "Parcial" : "Ocupado";
 
@@ -39,6 +47,11 @@ export function AvailabilityView({ availability }: AvailabilityViewProps) {
 								</Text>
 							) : null}
 							<Badge colorPalette={colorPalette}>{label}</Badge>
+							{isReservable ? (
+								<Button size="sm" onClick={() => onReserve(block)}>
+									Reservar este horario
+								</Button>
+							) : null}
 						</Flex>
 					</Flex>
 				);
