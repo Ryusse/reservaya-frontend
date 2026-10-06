@@ -1,11 +1,14 @@
-import { render, screen, fireEvent } from "#/lib/test-utils";
 import { describe, expect, it, vi } from "vitest";
-
-import { RegisterPage } from "./index";
 import { useRegister } from "#/hooks/use-register";
+import { fireEvent, render, screen } from "#/lib/test-utils";
+import { RegisterPage } from "./index";
 
 vi.mock("@tanstack/react-router", () => ({
-	Link: ({ children, to, style }: any) => <a href={to} style={style}>{children}</a>,
+	Link: ({ children, to, style }: any) => (
+		<a href={to} style={style}>
+			{children}
+		</a>
+	),
 	useNavigate: () => vi.fn(),
 }));
 
@@ -24,12 +27,18 @@ describe("RegisterPage", () => {
 
 		render(<RegisterPage />);
 
-		expect(screen.getByRole("heading", { name: "Crear cuenta" })).toBeInTheDocument();
+		expect(
+			screen.getByRole("heading", { name: "Crear cuenta" }),
+		).toBeInTheDocument();
 		expect(screen.getByLabelText("Nombre")).toBeInTheDocument();
 		expect(screen.getByLabelText("Correo")).toBeInTheDocument();
 		expect(screen.getByLabelText("Contraseña")).toBeInTheDocument();
-		expect(screen.getByRole("button", { name: "Registrarme" })).toBeInTheDocument();
-		expect(screen.getByRole("link", { name: "Inicia sesión" })).toBeInTheDocument();
+		expect(
+			screen.getByRole("button", { name: "Registrarme" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("link", { name: "Inicia sesión" }),
+		).toBeInTheDocument();
 	});
 
 	it("calls register mutation when submitted with valid data", async () => {
@@ -68,7 +77,10 @@ describe("RegisterPage", () => {
 			mutate: vi.fn(),
 			isPending: false,
 			isError: true,
-			error: { isAxiosError: true, response: { data: { errors: ["El correo ya está en uso"] } } },
+			error: {
+				isAxiosError: true,
+				response: { data: { errors: ["El correo ya está en uso"] } },
+			},
 		} as any);
 
 		render(<RegisterPage />);

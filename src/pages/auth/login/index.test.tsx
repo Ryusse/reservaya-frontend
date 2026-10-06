@@ -1,11 +1,14 @@
-import { render, screen, fireEvent } from "#/lib/test-utils";
 import { describe, expect, it, vi } from "vitest";
-
-import { LoginPage } from "./index";
 import { useLogin } from "#/hooks/use-login";
+import { fireEvent, render, screen } from "#/lib/test-utils";
+import { LoginPage } from "./index";
 
 vi.mock("@tanstack/react-router", () => ({
-	Link: ({ children, to, style }: any) => <a href={to} style={style}>{children}</a>,
+	Link: ({ children, to, style }: any) => (
+		<a href={to} style={style}>
+			{children}
+		</a>
+	),
 	useNavigate: () => vi.fn(),
 }));
 
@@ -24,11 +27,15 @@ describe("LoginPage", () => {
 
 		render(<LoginPage />);
 
-		expect(screen.getByRole("heading", { name: "Iniciar sesión" })).toBeInTheDocument();
+		expect(
+			screen.getByRole("heading", { name: "Iniciar sesión" }),
+		).toBeInTheDocument();
 		expect(screen.getByLabelText("Correo")).toBeInTheDocument();
 		expect(screen.getByLabelText("Contraseña")).toBeInTheDocument();
 		expect(screen.getByRole("button", { name: "Entrar" })).toBeInTheDocument();
-		expect(screen.getByRole("link", { name: "Regístrate" })).toBeInTheDocument();
+		expect(
+			screen.getByRole("link", { name: "Regístrate" }),
+		).toBeInTheDocument();
 	});
 
 	it("calls login mutation when submitted with valid data", async () => {
@@ -63,7 +70,10 @@ describe("LoginPage", () => {
 			mutate: vi.fn(),
 			isPending: false,
 			isError: true,
-			error: { isAxiosError: true, response: { data: { error: "Credenciales inválidas" } } },
+			error: {
+				isAxiosError: true,
+				response: { data: { error: "Credenciales inválidas" } },
+			},
 		} as any);
 
 		render(<LoginPage />);
