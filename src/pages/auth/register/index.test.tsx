@@ -50,7 +50,7 @@ describe("RegisterPage", () => {
 			target: { value: "test@example.com" },
 		});
 		fireEvent.change(screen.getByLabelText("Contraseña"), {
-			target: { value: "password123" },
+			target: { value: "Password123" },
 		});
 		fireEvent.click(screen.getByRole("button", { name: "Registrarme" }));
 
@@ -58,7 +58,7 @@ describe("RegisterPage", () => {
 			expect(mutateMock).toHaveBeenCalledWith({
 				name: "Juan",
 				email: "test@example.com",
-				password: "password123",
+				password: "Password123",
 			});
 		});
 	});

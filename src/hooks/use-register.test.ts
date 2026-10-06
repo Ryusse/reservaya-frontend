@@ -31,10 +31,10 @@ describe("useRegister", () => {
 
     const { result } = renderHook(() => useRegister(), { wrapper });
 
-    result.current.mutate({ name: "Test", email: "test@example.com", password: "password123" });
+    result.current.mutate({ name: "Test", email: "test@example.com", password: "Password123" });
 
     await waitFor(() => {
-      expect(authService.register).toHaveBeenCalledWith({ name: "Test", email: "test@example.com", password: "password123" });
+      expect(authService.register).toHaveBeenCalledWith({ name: "Test", email: "test@example.com", password: "Password123" });
       expect(setUser).toHaveBeenCalledWith(mockUser);
     });
   });
