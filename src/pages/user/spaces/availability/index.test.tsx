@@ -51,7 +51,7 @@ describe("UserSpaceAvailabilityPage", () => {
 		});
 	});
 
-	it("fetches availability when the form is submitted", async () => {
+	it("fetches availability reactively when space and date change", async () => {
 		vi.mocked(spacesService.list).mockResolvedValue([
 			{
 				id: 1,
@@ -81,18 +81,14 @@ describe("UserSpaceAvailabilityPage", () => {
 		});
 
 		// Select space
-		const select = screen.getByLabelText("Espacio");
+		const select = screen.getByLabelText("1. Elige un espacio");
 		fireEvent.change(select, { target: { value: "1" } });
 
 		// Set date
-		const dateInput = screen.getByLabelText("Fecha");
+		const dateInput = screen.getByLabelText("2. Selecciona la fecha");
 		fireEvent.change(dateInput, { target: { value: "2026-10-10" } });
 
-		// Submit
-		const button = screen.getByRole("button", { name: "Consultar" });
-		fireEvent.click(button);
-
-		// Check if getAvailability was called
+		// Check if getAvailability was called (reactively, without button)
 		await waitFor(() => {
 			expect(spacesService.getAvailability).toHaveBeenCalledWith(1, "2026-10-10");
 			expect(screen.getByText("08:00–10:00")).toBeInTheDocument();
