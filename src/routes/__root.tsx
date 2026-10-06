@@ -17,7 +17,12 @@ import { useApiErrors } from "#/hooks/use-api-errors";
 import type { SessionInfo } from "#/hooks/use-session";
 import { useSession } from "#/hooks/use-session";
 import { authService } from "#/services/auth.service";
-import { clearUser, sessionStore, setUser, useSessionStore } from "#/stores/session.store";
+import {
+	clearUser,
+	sessionStore,
+	setUser,
+	useSessionStore,
+} from "#/stores/session.store";
 
 import TanStackQueryDevtools from "../integrations/tanstack-query/devtools";
 import appCss from "../styles.css?url";
@@ -51,7 +56,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 function RootComponent() {
 	const { queryClient } = Route.useRouteContext();
 	const router = useRouter();
-	const auth = useSession();
+	const _auth = useSession();
 	const status = useSessionStore((s) => s.status);
 
 	useApiErrors();
@@ -64,7 +69,7 @@ function RootComponent() {
 	// Invalida el router si cambia el auth state client-side
 	useEffect(() => {
 		if (status === "ready") router.invalidate();
-	}, [auth.isAuthenticated, auth.role, status, router]);
+	}, [status, router]);
 
 	return (
 		<QueryClientProvider client={queryClient}>

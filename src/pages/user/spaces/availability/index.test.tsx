@@ -70,7 +70,12 @@ describe("UserSpaceAvailabilityPage", () => {
 			date: "2026-10-10",
 			available: true,
 			blocks: [
-				{ startTime: "08:00", endTime: "10:00", status: "free", seatsAvailable: 10 },
+				{
+					startTime: "08:00",
+					endTime: "10:00",
+					status: "free",
+					seatsAvailable: 10,
+				},
 			],
 		});
 
@@ -90,7 +95,10 @@ describe("UserSpaceAvailabilityPage", () => {
 
 		// Check if getAvailability was called (reactively, without button)
 		await waitFor(() => {
-			expect(spacesService.getAvailability).toHaveBeenCalledWith(1, "2026-10-10");
+			expect(spacesService.getAvailability).toHaveBeenCalledWith(
+				1,
+				"2026-10-10",
+			);
 			expect(screen.getByText("08:00–10:00")).toBeInTheDocument();
 			expect(screen.getByText("Disponible")).toBeInTheDocument();
 		});

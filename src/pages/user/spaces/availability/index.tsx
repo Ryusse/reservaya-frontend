@@ -1,4 +1,13 @@
-import { Field, Flex, Heading, Input, NativeSelect, Spinner, Stack, Text } from "@chakra-ui/react";
+import {
+	Field,
+	Flex,
+	Heading,
+	Input,
+	NativeSelect,
+	Spinner,
+	Stack,
+	Text,
+} from "@chakra-ui/react";
 import { useState } from "react";
 
 import { AvailabilityView } from "#/components/spaces/availability-view";
@@ -18,7 +27,7 @@ function maxAdvanceDate(): string {
 
 export function UserSpaceAvailabilityPage() {
 	const spaces = useSpaces();
-	
+
 	const [spaceId, setSpaceId] = useState<number>(0);
 	const [date, setDate] = useState<string>(today());
 
@@ -37,8 +46,8 @@ export function UserSpaceAvailabilityPage() {
 					<Field.Root>
 						<Field.Label>1. Elige un espacio</Field.Label>
 						<NativeSelect.Root>
-							<NativeSelect.Field 
-								value={spaceId} 
+							<NativeSelect.Field
+								value={spaceId}
 								onChange={(e) => setSpaceId(Number(e.target.value))}
 							>
 								<option value={0} disabled>
@@ -54,11 +63,11 @@ export function UserSpaceAvailabilityPage() {
 						</NativeSelect.Root>
 					</Field.Root>
 				</Flex>
-				
+
 				<Flex flex="1">
 					<Field.Root>
 						<Field.Label>2. Selecciona la fecha</Field.Label>
-						<Input 
+						<Input
 							type="date"
 							min={today()}
 							max={maxAdvanceDate()}
@@ -81,7 +90,9 @@ export function UserSpaceAvailabilityPage() {
 				</Stack>
 			) : (
 				<Stack gap="4">
-					<Heading size="md" color="fg.muted">Horarios disponibles</Heading>
+					<Heading size="md" color="fg.muted">
+						Horarios disponibles
+					</Heading>
 					<AvailabilityView availability={availability.data} />
 					{/* Aquí irá la tabla CRUD de reservas en la próxima HU */}
 				</Stack>

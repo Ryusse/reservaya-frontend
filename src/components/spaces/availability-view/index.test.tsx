@@ -27,7 +27,9 @@ describe("AvailabilityView", () => {
 
 		render(<AvailabilityView availability={data} />, { wrapper: Provider });
 
-		expect(screen.getByText("Este espacio no está disponible.")).toBeInTheDocument();
+		expect(
+			screen.getByText("Este espacio no está disponible."),
+		).toBeInTheDocument();
 	});
 
 	it("renders free, partial, and full blocks with correct colors and labels", () => {
@@ -36,9 +38,24 @@ describe("AvailabilityView", () => {
 			date: "2026-10-10",
 			available: true,
 			blocks: [
-				{ startTime: "08:00", endTime: "10:00", status: "free", seatsAvailable: 10 },
-				{ startTime: "10:00", endTime: "12:00", status: "partial", seatsAvailable: 5 },
-				{ startTime: "12:00", endTime: "14:00", status: "full", seatsAvailable: 0 },
+				{
+					startTime: "08:00",
+					endTime: "10:00",
+					status: "free",
+					seatsAvailable: 10,
+				},
+				{
+					startTime: "10:00",
+					endTime: "12:00",
+					status: "partial",
+					seatsAvailable: 5,
+				},
+				{
+					startTime: "12:00",
+					endTime: "14:00",
+					status: "full",
+					seatsAvailable: 0,
+				},
 			],
 		};
 

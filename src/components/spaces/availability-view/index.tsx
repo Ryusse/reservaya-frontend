@@ -38,9 +38,7 @@ export function AvailabilityView({ availability }: AvailabilityViewProps) {
 									{block.seatsAvailable} cupos disponibles
 								</Text>
 							) : null}
-							<Badge colorPalette={colorPalette}>
-								{label}
-							</Badge>
+							<Badge colorPalette={colorPalette}>{label}</Badge>
 						</Flex>
 					</Flex>
 				);
