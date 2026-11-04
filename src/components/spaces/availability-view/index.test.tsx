@@ -17,7 +17,7 @@ const mockSpace = {
 };
 
 describe("AvailabilityView", () => {
-	it("shows 'not available' message when space is not available", () => {
+	it("explains that no hours are left when there are no blocks", () => {
 		const data: SpaceAvailability = {
 			space: mockSpace,
 			date: "2026-10-10",
@@ -30,8 +30,34 @@ describe("AvailabilityView", () => {
 		});
 
 		expect(
-			screen.getByText("Este espacio no está disponible."),
+			screen.getByText("No hay horarios disponibles para este día."),
 		).toBeInTheDocument();
+	});
+
+	it("lists fully booked blocks without offering to reserve them", () => {
+		const data: SpaceAvailability = {
+			space: mockSpace,
+			date: "2026-10-10",
+			available: false,
+			blocks: [
+				{
+					startTime: "08:00",
+					endTime: "18:00",
+					status: "full",
+					seatsAvailable: 0,
+				},
+			],
+		};
+
+		render(<AvailabilityView availability={data} onReserve={vi.fn()} />, {
+			wrapper: Provider,
+		});
+
+		expect(screen.getByText("08:00–18:00")).toBeInTheDocument();
+		expect(screen.getByText("Ocupado")).toBeInTheDocument();
+		expect(
+			screen.queryByRole("button", { name: "Reservar este horario" }),
+		).not.toBeInTheDocument();
 	});
 
 	it("renders free, partial, and full blocks with correct colors and labels", () => {
