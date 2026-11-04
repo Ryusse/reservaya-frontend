@@ -59,7 +59,7 @@ export function parseOccupancySearch(
 
 export type HeatLevel = 0 | 1 | 2 | 3;
 
-const blueShades = ["subtle", "muted", "emphasized", "solid"] as const;
+const blueShades = ["subtle", "emphasized", "solid"] as const;
 
 export function heatBackground(level: HeatLevel): string {
 	if (level === 0) return "bg.muted";
