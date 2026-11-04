@@ -10,15 +10,35 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Provider } from "#/components/ui/provider";
 import type { Reservation } from "#/models/reservation";
+import type { Space } from "#/models/space";
 import { reservationsService } from "#/services/reservations.service";
+import { spacesService } from "#/services/spaces.service";
 import { UserReservationsPage } from "./index";
 
 vi.mock("#/services/reservations.service", () => ({
 	reservationsService: {
 		list: vi.fn(),
+		update: vi.fn(),
 		cancel: vi.fn(),
 	},
 }));
+
+vi.mock("#/services/spaces.service", () => ({
+	spacesService: {
+		list: vi.fn(),
+	},
+}));
+
+const salaB: Space = {
+	id: 3,
+	name: "Sala B",
+	capacity: 5,
+	location: "Piso 2",
+	startTime: "08:00",
+	endTime: "18:00",
+	status: "active",
+	spaceType: "shared_space",
+};
 
 const upcoming: Reservation = {
 	id: 1,
@@ -32,7 +52,7 @@ const upcoming: Reservation = {
 		id: 3,
 		name: "Sala B",
 		location: "Piso 2",
-		spaceType: "private_space",
+		spaceType: "shared_space",
 	},
 };
 
@@ -48,6 +68,7 @@ const started: Reservation = {
 describe("UserReservationsPage", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		vi.mocked(spacesService.list).mockResolvedValue([salaB]);
 	});
 
 	const renderPage = () => {
@@ -74,7 +95,7 @@ describe("UserReservationsPage", () => {
 		).toBeInTheDocument();
 	});
 
-	it("only offers cancel for reservations that can still be cancelled", async () => {
+	it("only offers cancel and edit for reservations that can still change", async () => {
 		vi.mocked(reservationsService.list).mockResolvedValue([upcoming, started]);
 
 		renderPage();
@@ -84,6 +105,9 @@ describe("UserReservationsPage", () => {
 		expect(
 			screen.getAllByRole("button", { name: "Cancelar reserva" }),
 		).toHaveLength(1);
+		expect(screen.getAllByRole("button", { name: "Modificar" })).toHaveLength(
+			1,
+		);
 	});
 
 	it("cancels a reservation after confirmation", async () => {
@@ -102,6 +126,34 @@ describe("UserReservationsPage", () => {
 
 		await waitFor(() => {
 			expect(reservationsService.cancel).toHaveBeenCalledWith(1);
+		});
+	});
+
+	it("submits the edited reservation with the new start time", async () => {
+		vi.mocked(reservationsService.list).mockResolvedValue([upcoming]);
+		vi.mocked(reservationsService.update).mockResolvedValue(undefined);
+
+		renderPage();
+
+		fireEvent.click(await screen.findByRole("button", { name: "Modificar" }));
+		const dialog = await screen.findByRole("dialog");
+		await within(dialog).findByRole("option", { name: "Sala B" });
+
+		fireEvent.change(within(dialog).getByLabelText("Hora de inicio"), {
+			target: { value: "09:30" },
+		});
+		fireEvent.click(
+			within(dialog).getByRole("button", { name: "Guardar cambios" }),
+		);
+
+		await waitFor(() => {
+			expect(reservationsService.update).toHaveBeenCalledWith(1, {
+				spaceId: 3,
+				date: "2026-11-10",
+				startTime: "09:30",
+				endTime: "10:00",
+				seatsReserved: 1,
+			});
 		});
 	});
 

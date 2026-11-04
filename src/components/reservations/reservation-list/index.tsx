@@ -14,11 +14,13 @@ const statusPalette: Record<ReservationStatus, string> = {
 
 type ReservationListProps = {
 	reservations: Reservation[];
+	onEdit: (reservation: Reservation) => void;
 	onCancel: (reservation: Reservation) => void;
 };
 
 export function ReservationList({
 	reservations,
+	onEdit,
 	onCancel,
 }: ReservationListProps) {
 	return (
@@ -55,14 +57,27 @@ export function ReservationList({
 							{statusLabel[reservation.status]}
 						</Badge>
 						{reservation.cancellable ? (
-							<Button
-								size="sm"
-								variant="outline"
-								colorPalette="red"
-								onClick={() => onCancel(reservation)}
+							<Flex
+								direction={{ base: "column", md: "row" }}
+								gap="2"
+								align={{ base: "stretch", md: "center" }}
 							>
-								Cancelar reserva
-							</Button>
+								<Button
+									size="sm"
+									variant="outline"
+									onClick={() => onEdit(reservation)}
+								>
+									Modificar
+								</Button>
+								<Button
+									size="sm"
+									variant="outline"
+									colorPalette="red"
+									onClick={() => onCancel(reservation)}
+								>
+									Cancelar reserva
+								</Button>
+							</Flex>
 						) : null}
 					</Flex>
 				</Flex>

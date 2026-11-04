@@ -16,6 +16,10 @@ export const reservationsService = {
 		await http.post("/reservations", toReservationPayload(input));
 	},
 
+	async update(id: number, input: NewReservation): Promise<void> {
+		await http.patch(`/reservations/${id}`, toReservationPayload(input));
+	},
+
 	async cancel(id: number): Promise<void> {
 		await http.patch(`/reservations/${id}/cancel`, {});
 	},
