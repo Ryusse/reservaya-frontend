@@ -39,6 +39,7 @@ export function OccupancyTable({ spaces }: OccupancyTableProps) {
 							<Table.Cell minW="180px">
 								<Flex align="center" gap="3">
 									<Progress.Root
+										colorPalette="blue"
 										value={Math.round(space.occupancyRate * 100)}
 										size="sm"
 										flex="1"

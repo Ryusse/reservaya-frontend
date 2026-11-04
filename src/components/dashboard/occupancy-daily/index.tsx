@@ -29,7 +29,12 @@ export function OccupancyDaily({ spaces }: OccupancyDailyProps) {
 					<Text w="110px" fontSize="sm">
 						{date}
 					</Text>
-					<Progress.Root value={Math.round(average * 100)} size="sm" flex="1">
+					<Progress.Root
+						value={Math.round(average * 100)}
+						size="sm"
+						flex="1"
+						colorPalette="blue"
+					>
 						<Progress.Track>
 							<Progress.Range />
 						</Progress.Track>
