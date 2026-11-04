@@ -1,9 +1,9 @@
 import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import {
 	formatPercent,
+	heatBackground,
 	heatLegend,
 	heatLevel,
-	heatShades,
 } from "#/lib/occupancy";
 import type { OccupancySpace } from "#/models/occupancy";
 
@@ -53,7 +53,7 @@ export function OccupancyHeatmap({ spaces }: OccupancyHeatmapProps) {
 											/>
 										);
 									}
-									const shade = heatShades[heatLevel(rate)];
+									const background = heatBackground(heatLevel(rate));
 									const label = `${space.name}, ${String(hour).padStart(2, "0")}:00: ${formatPercent(rate)} ocupado`;
 									return (
 										<Box
@@ -65,7 +65,7 @@ export function OccupancyHeatmap({ spaces }: OccupancyHeatmapProps) {
 											h="9"
 											rounded="sm"
 											colorPalette="blue"
-											bg={`colorPalette.${shade}`}
+											bg={background}
 										/>
 									);
 								})}
@@ -85,7 +85,7 @@ export function OccupancyHeatmap({ spaces }: OccupancyHeatmapProps) {
 							h="4"
 							rounded="sm"
 							colorPalette="blue"
-							bg={`colorPalette.${heatShades[step.level]}`}
+							bg={heatBackground(step.level)}
 						/>
 						<Text fontSize="sm" color="fg.muted">
 							{step.label}

@@ -59,7 +59,12 @@ export function parseOccupancySearch(
 
 export type HeatLevel = 0 | 1 | 2 | 3;
 
-export const heatShades = ["subtle", "muted", "emphasized", "solid"] as const;
+const blueShades = ["subtle", "muted", "emphasized", "solid"] as const;
+
+export function heatBackground(level: HeatLevel): string {
+	if (level === 0) return "bg.muted";
+	return `colorPalette.${blueShades[level - 1]}`;
+}
 
 export function heatLevel(rate: number): HeatLevel {
 	if (rate <= 0) return 0;

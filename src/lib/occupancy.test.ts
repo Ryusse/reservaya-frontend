@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
 	currentMonthRange,
+	heatBackground,
 	heatLevel,
 	MAX_PERIOD_DAYS,
 	parseOccupancySearch,
@@ -53,6 +54,12 @@ describe("occupancy helpers", () => {
 		expect(heatLevel(0.749)).toBe(2);
 		expect(heatLevel(0.75)).toBe(3);
 		expect(heatLevel(1)).toBe(3);
+	});
+
+	it("paints zero occupancy neutral and the rest in the blue scale", () => {
+		expect(heatBackground(0)).toBe("bg.muted");
+		expect(heatBackground(1)).toBe("colorPalette.subtle");
+		expect(heatBackground(3)).toBe("colorPalette.solid");
 	});
 
 	it("parses search params and drops invalid values", () => {
