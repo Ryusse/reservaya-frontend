@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Provider } from "#/components/ui/provider";
-import type { OccupancyReport } from "#/models/occupancy";
+import type { OccupancyReport, OccupancySearch } from "#/models/occupancy";
 import type { Space } from "#/models/space";
 import { dashboardService } from "#/services/dashboard.service";
 import { spacesService } from "#/services/spaces.service";
@@ -63,7 +63,7 @@ describe("AdminOccupancyPage", () => {
 	});
 
 	const renderPage = (
-		search = { from: "2026-11-03", to: "2026-11-03" },
+		search: OccupancySearch = { from: "2026-11-03", to: "2026-11-03" },
 		onSearchChange = vi.fn(),
 	) => {
 		const queryClient = new QueryClient({
@@ -100,6 +100,22 @@ describe("AdminOccupancyPage", () => {
 		expect(
 			await screen.findByText(
 				"La fecha inicial no puede ser posterior a la final",
+			),
+		).toBeInTheDocument();
+		expect(dashboardService.getOccupancy).not.toHaveBeenCalled();
+	});
+
+	it("does not query the API when the hour range is inverted", async () => {
+		renderPage({
+			from: "2026-11-03",
+			to: "2026-11-03",
+			fromHour: 15,
+			toHour: 9,
+		});
+
+		expect(
+			await screen.findByText(
+				"La hora inicial no puede ser posterior a la final",
 			),
 		).toBeInTheDocument();
 		expect(dashboardService.getOccupancy).not.toHaveBeenCalled();

@@ -4,6 +4,7 @@ import {
 	currentMonthRange,
 	heatBackground,
 	heatLevel,
+	hourRangeError,
 	MAX_PERIOD_DAYS,
 	parseOccupancySearch,
 	periodDays,
@@ -60,6 +61,24 @@ describe("occupancy helpers", () => {
 		expect(heatBackground(0)).toBe("bg.muted");
 		expect(heatBackground(1)).toBe("colorPalette.subtle");
 		expect(heatBackground(3)).toBe("colorPalette.solid");
+	});
+
+	it("parses hour params and drops values outside 0 to 23", () => {
+		expect(parseOccupancySearch({ fromHour: 9, toHour: "18" })).toMatchObject({
+			fromHour: 9,
+			toHour: 18,
+		});
+		expect(parseOccupancySearch({ fromHour: 24, toHour: "x" })).toMatchObject({
+			fromHour: undefined,
+			toHour: undefined,
+		});
+	});
+
+	it("rejects an inverted hour range", () => {
+		expect(hourRangeError(15, 9)).toBe(
+			"La hora inicial no puede ser posterior a la final",
+		);
+		expect(hourRangeError(9, 15)).toBeNull();
 	});
 
 	it("parses search params and drops invalid values", () => {

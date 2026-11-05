@@ -10,6 +10,8 @@ export const occupancyQueryKey = (query: OccupancyQuery) =>
 		query.from,
 		query.to,
 		query.spaceId ?? null,
+		query.fromHour ?? null,
+		query.toHour ?? null,
 	] as const;
 
 export function useOccupancy(query: OccupancyQuery, enabled: boolean) {

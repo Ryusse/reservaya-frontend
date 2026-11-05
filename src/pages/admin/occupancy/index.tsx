@@ -18,10 +18,17 @@ import { useSpaces } from "#/hooks/use-spaces";
 import { apiErrors } from "#/lib/api-error";
 import {
 	currentMonthRange,
+	hourRangeError,
 	MAX_PERIOD_DAYS,
 	periodError,
 } from "#/lib/occupancy";
 import type { OccupancySearch } from "#/models/occupancy";
+
+const hourOptions = [...Array(24).keys()].map((hour) => (
+	<option key={hour} value={hour}>
+		{String(hour).padStart(2, "0")}:00
+	</option>
+));
 
 type AdminOccupancyPageProps = {
 	search: OccupancySearch;
@@ -36,11 +43,21 @@ export function AdminOccupancyPage({
 	const from = search.from ?? defaults.from;
 	const to = search.to ?? defaults.to;
 	const validationError = periodError(from, to);
+	const fromHour = search.fromHour ?? 0;
+	const toHour = search.toHour ?? 23;
+	const hourError = hourRangeError(fromHour, toHour);
+	const invalid = validationError ?? hourError;
 
 	const spaces = useSpaces();
 	const occupancy = useOccupancy(
-		{ from, to, spaceId: search.spaceId },
-		validationError === null,
+		{
+			from,
+			to,
+			spaceId: search.spaceId,
+			fromHour: search.fromHour,
+			toHour: search.toHour,
+		},
+		invalid === null,
 	);
 
 	return (
@@ -94,10 +111,44 @@ export function AdminOccupancyPage({
 						<NativeSelect.Indicator />
 					</NativeSelect.Root>
 				</Field.Root>
+				<Field.Root maxW="130px">
+					<Field.Label>Desde hora</Field.Label>
+					<NativeSelect.Root>
+						<NativeSelect.Field
+							value={fromHour}
+							onChange={(event) =>
+								onSearchChange({
+									...search,
+									fromHour: Number(event.target.value),
+								})
+							}
+						>
+							{hourOptions}
+						</NativeSelect.Field>
+						<NativeSelect.Indicator />
+					</NativeSelect.Root>
+				</Field.Root>
+				<Field.Root maxW="130px">
+					<Field.Label>Hasta hora</Field.Label>
+					<NativeSelect.Root>
+						<NativeSelect.Field
+							value={toHour}
+							onChange={(event) =>
+								onSearchChange({
+									...search,
+									toHour: Number(event.target.value),
+								})
+							}
+						>
+							{hourOptions}
+						</NativeSelect.Field>
+						<NativeSelect.Indicator />
+					</NativeSelect.Root>
+				</Field.Root>
 			</Flex>
 
-			{validationError ? (
-				<Text color="fg.error">{validationError}</Text>
+			{invalid ? (
+				<Text color="fg.error">{invalid}</Text>
 			) : occupancy.isPending ? (
 				<Spinner />
 			) : occupancy.isError ? (

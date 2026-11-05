@@ -41,10 +41,14 @@ export type OccupancySearch = {
 	from?: string;
 	to?: string;
 	spaceId?: number;
+	fromHour?: number;
+	toHour?: number;
 };
 
 export type OccupancyQuery = {
 	from: string;
 	to: string;
 	spaceId?: number;
+	fromHour?: number;
+	toHour?: number;
 };
