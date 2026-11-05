@@ -10,6 +10,8 @@ export const dashboardService = {
 				from: query.from,
 				to: query.to,
 				space_id: query.spaceId,
+				from_hour: query.fromHour,
+				to_hour: query.toHour,
 			},
 		});
 		return toOccupancyReport(data);
