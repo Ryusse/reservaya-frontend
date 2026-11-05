@@ -54,7 +54,30 @@ export function parseOccupancySearch(
 		from,
 		to,
 		spaceId: Number.isInteger(spaceId) && spaceId > 0 ? spaceId : undefined,
+		fromHour: parseHour(search.fromHour),
+		toHour: parseHour(search.toHour),
 	};
+}
+
+export function hourRangeError(
+	fromHour: number,
+	toHour: number,
+): string | null {
+	if (fromHour > toHour) {
+		return "La hora inicial no puede ser posterior a la final";
+	}
+	return null;
+}
+
+function parseHour(value: unknown): number | undefined {
+	const hour = Number(value);
+	return value !== undefined &&
+		value !== "" &&
+		Number.isInteger(hour) &&
+		hour >= 0 &&
+		hour <= 23
+		? hour
+		: undefined;
 }
 
 export type HeatLevel = 0 | 1 | 2 | 3;
