@@ -1,5 +1,11 @@
 import type { LucideIcon } from "lucide-react";
-import { Building2, Calendar, House } from "lucide-react";
+import {
+	Building2,
+	Calendar,
+	CalendarDays,
+	ChartColumn,
+	House,
+} from "lucide-react";
 
 import { Role } from "#/models/role";
 
@@ -13,7 +19,19 @@ export type NavItem = {
 export const navItems: NavItem[] = [
 	{ label: "Inicio", to: "/", icon: House, roles: [Role.User] },
 	{ label: "Reservar", to: "/spaces", icon: Calendar, roles: [Role.User] },
+	{
+		label: "Mis reservas",
+		to: "/reservations",
+		icon: CalendarDays,
+		roles: [Role.User],
+	},
 	{ label: "Espacios", to: "/admin", icon: Building2, roles: [Role.Admin] },
+	{
+		label: "Ocupación",
+		to: "/occupancy",
+		icon: ChartColumn,
+		roles: [Role.Admin],
+	},
 ];
 
 export function navItemsForRole(role: Role | null): NavItem[] {

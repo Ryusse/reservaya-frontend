@@ -11,6 +11,10 @@ export type SpaceResponse = {
 	space_type: string;
 };
 
+export function toSpaceType(value: string): SpaceType {
+	return value === "private_space" ? "private_space" : "shared_space";
+}
+
 export function toSpace(data: SpaceResponse): Space {
 	return {
 		id: data.id,
@@ -20,9 +24,7 @@ export function toSpace(data: SpaceResponse): Space {
 		startTime: data.start_time,
 		endTime: data.end_time,
 		status: (data.status === "inactive" ? "inactive" : "active") as SpaceStatus,
-		spaceType: (data.space_type === "private_space"
-			? "private_space"
-			: "shared_space") as SpaceType,
+		spaceType: toSpaceType(data.space_type),
 	};
 }
 

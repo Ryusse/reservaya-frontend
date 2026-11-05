@@ -14,6 +14,8 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AuthedIndexRouteImport } from './routes/_authed/index'
 import { Route as AuthedAdminRouteImport } from './routes/_authed/admin'
+import { Route as AuthedOccupancyRouteImport } from './routes/_authed/occupancy'
+import { Route as AuthedReservationsRouteImport } from './routes/_authed/reservations'
 import { Route as AuthedSpacesRouteImport } from './routes/_authed/spaces'
 
 const AuthedRoute = AuthedRouteImport.update({
@@ -40,6 +42,16 @@ const AuthedAdminRoute = AuthedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthedRoute,
 } as any)
+const AuthedOccupancyRoute = AuthedOccupancyRouteImport.update({
+  id: '/occupancy',
+  path: '/occupancy',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const AuthedReservationsRoute = AuthedReservationsRouteImport.update({
+  id: '/reservations',
+  path: '/reservations',
+  getParentRoute: () => AuthedRoute,
+} as any)
 const AuthedSpacesRoute = AuthedSpacesRouteImport.update({
   id: '/spaces',
   path: '/spaces',
@@ -51,12 +63,16 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/admin': typeof AuthedAdminRoute
+  '/occupancy': typeof AuthedOccupancyRoute
+  '/reservations': typeof AuthedReservationsRoute
   '/spaces': typeof AuthedSpacesRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/admin': typeof AuthedAdminRoute
+  '/occupancy': typeof AuthedOccupancyRoute
+  '/reservations': typeof AuthedReservationsRoute
   '/spaces': typeof AuthedSpacesRoute
   '/': typeof AuthedIndexRoute
 }
@@ -66,20 +82,38 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/_authed/admin': typeof AuthedAdminRoute
+  '/_authed/occupancy': typeof AuthedOccupancyRoute
+  '/_authed/reservations': typeof AuthedReservationsRoute
   '/_authed/spaces': typeof AuthedSpacesRoute
   '/_authed/': typeof AuthedIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/admin' | '/spaces'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/register'
+    | '/admin'
+    | '/occupancy'
+    | '/reservations'
+    | '/spaces'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/register' | '/admin' | '/spaces' | '/'
+  to:
+    | '/login'
+    | '/register'
+    | '/admin'
+    | '/occupancy'
+    | '/reservations'
+    | '/spaces'
+    | '/'
   id:
     | '__root__'
     | '/_authed'
     | '/login'
     | '/register'
     | '/_authed/admin'
+    | '/_authed/occupancy'
+    | '/_authed/reservations'
     | '/_authed/spaces'
     | '/_authed/'
   fileRoutesById: FileRoutesById
@@ -127,6 +161,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthedAdminRouteImport
       parentRoute: typeof AuthedRoute
     }
+    '/_authed/occupancy': {
+      id: '/_authed/occupancy'
+      path: '/occupancy'
+      fullPath: '/occupancy'
+      preLoaderRoute: typeof AuthedOccupancyRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_authed/reservations': {
+      id: '/_authed/reservations'
+      path: '/reservations'
+      fullPath: '/reservations'
+      preLoaderRoute: typeof AuthedReservationsRouteImport
+      parentRoute: typeof AuthedRoute
+    }
     '/_authed/spaces': {
       id: '/_authed/spaces'
       path: '/spaces'
@@ -139,12 +187,16 @@ declare module '@tanstack/react-router' {
 
 interface AuthedRouteChildren {
   AuthedAdminRoute: typeof AuthedAdminRoute
+  AuthedOccupancyRoute: typeof AuthedOccupancyRoute
+  AuthedReservationsRoute: typeof AuthedReservationsRoute
   AuthedSpacesRoute: typeof AuthedSpacesRoute
   AuthedIndexRoute: typeof AuthedIndexRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedAdminRoute: AuthedAdminRoute,
+  AuthedOccupancyRoute: AuthedOccupancyRoute,
+  AuthedReservationsRoute: AuthedReservationsRoute,
   AuthedSpacesRoute: AuthedSpacesRoute,
   AuthedIndexRoute: AuthedIndexRoute,
 }

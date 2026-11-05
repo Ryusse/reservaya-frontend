@@ -14,8 +14,10 @@ export function AvailabilityView({
 	availability,
 	onReserve,
 }: AvailabilityViewProps) {
-	if (!availability.available) {
-		return <Text color="fg.muted">Este espacio no está disponible.</Text>;
+	if (availability.blocks.length === 0) {
+		return (
+			<Text color="fg.muted">No hay horarios disponibles para este día.</Text>
+		);
 	}
 
 	return (

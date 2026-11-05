@@ -14,23 +14,14 @@ import { AvailabilityView } from "#/components/spaces/availability-view";
 import { useSpaceAvailability } from "#/hooks/use-space-availability";
 import { useSpaces } from "#/hooks/use-spaces";
 import { apiErrors } from "#/lib/api-error";
+import { maxAdvanceIso, todayIso } from "#/lib/dates";
 import type { AvailabilityBlock } from "#/models/availability";
-
-function today(): string {
-	return new Date().toISOString().slice(0, 10);
-}
-
-function maxAdvanceDate(): string {
-	const date = new Date();
-	date.setDate(date.getDate() + 7);
-	return date.toISOString().slice(0, 10);
-}
 
 export function UserSpaceAvailabilityPage() {
 	const spaces = useSpaces();
 
 	const [spaceId, setSpaceId] = useState<number>(0);
-	const [date, setDate] = useState<string>(today());
+	const [date, setDate] = useState<string>(todayIso());
 	const [reservingBlock, setReservingBlock] =
 		useState<AvailabilityBlock | null>(null);
 
@@ -72,8 +63,8 @@ export function UserSpaceAvailabilityPage() {
 						<Field.Label>2. Selecciona la fecha</Field.Label>
 						<Input
 							type="date"
-							min={today()}
-							max={maxAdvanceDate()}
+							min={todayIso()}
+							max={maxAdvanceIso(7)}
 							value={date}
 							onChange={(e) => setDate(e.target.value)}
 						/>
